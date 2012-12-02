@@ -1,3 +1,6 @@
+/* ----- css-pcw ----- */
+{{{license}}}
+
 ;$(function(){
 "use strict";
 ({
@@ -37,8 +40,8 @@
 		this.buttonInput = $(".css-pcw-input");
 		this.optionsContainer = $(".css-pcw-options-container");
 
-		this.load('http://{{{url}}}/socket.io/socket.io.js',function() {
-			par.socket = io.connect('http://{{{url}}}');
+		this.load('{{{url}}}/socket.io/socket.io.js',function() {
+			par.socket = io.connect('{{{url}}}');
 			par.socketEvents(par);
 		});
 	},

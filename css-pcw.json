@@ -1,8 +1,4 @@
 {
-	"url" : "localhost:8080",
-	"indexFile" : "lessCompiler.html",
-	"rootPath" : "",
-	"extraPath" : "",
-	"fileName" : "site",
-	"fileType" : ".less"
+	"port" : "8080",
+	"url" : "http://localhost:8080"
 }

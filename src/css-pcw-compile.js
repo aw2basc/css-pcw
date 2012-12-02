@@ -1,8 +1,12 @@
-exports.setup = function(){
+var fs = require('fs'),
+	less = require('less'),
+	spawn = require('child_process').spawn;
 
+exports.setup = function(socket, path){
+	lessCompiler(socket, path);
 };
-exports.compile = function(){
-
+exports.file = function(socket, path){
+	compileFile(socket, path);
 };
 
 var lessCompiler = function(socket, path){
@@ -73,7 +77,6 @@ var results = function(socket, logObj){
 			socket.emit('css-pcw-compile-error', logObj);
 			console.log(logObj);
 		}
-		// console.log(logObj.error);
 	}else{
 		socket.emit('css-pcw-compile');
 	}
