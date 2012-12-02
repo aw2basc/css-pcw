@@ -16,7 +16,7 @@ npm install mustache`
 
 **add to html**  
 `<div id="css-pcw"></div>`  
-`<script src="http://localhost:8080/css-pcw/" data-css-pcw="/path/to/less/file.less"></script>`
+`<script src="http://localhost:8080/css-pcw/" data-css-pcw="/path/to/less/file.less"></script>`   
 *`data-css-pcw` attr is optional*
 
 ----------
