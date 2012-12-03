@@ -1,11 +1,13 @@
 /* ----- css-pcw ----- */
 {{{license}}}
 
-;$(function(){
+;(function(){
 "use strict";
+var client = function($){
+$(function(){
 ({
 	load:function(script,callback){
-		jQuery.ajax({ async:false, type:'GET', url:script, data:null, success:callback, dataType:'script' });
+		$.ajax({ async:false, type:'GET', url:script, data:null, success:callback, dataType:'script' });
 	},
 	init : function(){
 		this.html = '{{{html}}}',
@@ -193,10 +195,37 @@
 	},
 	htmlEncode : function(value){
 		if (value) {
-			return jQuery("<div />").text(value).html();
+			return $("<div />").text(value).html();
 		} else {
 			return "";
 		}
 	}
 }).init();
 });
+};
+
+(function(window, document, version, callback) {
+    var j = window.jQuery,
+		d = '',
+		loaded = false;
+    if (typeof j === 'undefined' || version > j.fn.jquery) {
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js";
+        script.onload = script.onreadystatechange = function() {
+            if (!loaded && (!(d = this.readyState) || d === "loaded" || d === "complete")) {
+				loaded = true;
+                callback((j = window.jQuery).noConflict(1));
+                j(script).remove();
+            }
+        };
+        document.documentElement.childNodes[0].appendChild(script);
+    }else{
+		client(jQuery);
+	}
+})(window, document, "1.8.3", function($) {
+	client($);
+});
+
+
+}());
