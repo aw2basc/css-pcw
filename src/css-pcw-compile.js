@@ -22,10 +22,10 @@ var lessCompiler = function(socket, path){
 					});
 					compileFile(socket, path);
 				}else{
-					compErr(socket, 'not less file');
+					compErr(socket, 'file not .less');
 				}
 			}else{
-				compErr(socket, 'file does not exist');
+				compErr(socket, 'file null');
 			}
 		});
 	}catch(err){
