@@ -46,7 +46,7 @@ var compileFile = function(socket, path){
 		logCount = 0,
 		logObj = {},
 		errCount = 0;
-		lessc = spawn('lessc', ['--no-color', '--compress', path, cssFile]);
+		lessc = spawn('lessc', ['--no-color', '--yui-compress', path, cssFile]);
 	lessc.stderr.setEncoding('utf8');
 	lessc.stderr.on('data', function(data){
 		if(errCount === 0){
