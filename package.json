@@ -1,0 +1,26 @@
+{
+  "name": "css-pcw",
+  "version": "1.0.0",
+  "description": "browser based css preprocessor compiler and watcher",
+  "main": "css-pcw.js",
+  "directories": {
+    "src": "src",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aw2basc/css-pcw.git"
+  },
+  "author": "justin maxwell",
+  "license": "mit",
+  "readmeFilename": "README.md",
+  "gitHead": "818901008f3467d9fe6dd433a7407c03b25a0e93",
+  "dependencies": {
+    "express": "~3.1.1",
+    "socket.io": "~0.9.8",
+    "less": "~1.3.3"
+  }
+}
