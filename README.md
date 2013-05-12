@@ -3,7 +3,7 @@ browser based css preprocessor compiler and watcher for less
 
 ## to use  
 **install**  
-`npm install css-pcw`  
+`npm install css-pcw -g`  
 
 **run**  
 `css-pcw`  

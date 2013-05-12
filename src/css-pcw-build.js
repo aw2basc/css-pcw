@@ -1,6 +1,6 @@
 var fs = require('fs'),
 	mustache = require('mustache'),
-	clientPath = './client/',
+	clientPath = '../css-pcw/src/client/',
 	clientJS = '',
 	newJS = '',
 	view = {};
@@ -21,7 +21,7 @@ var setupJS = function(callback){
 };
 
 var getHTML = function(callback){
-	fs.readFile('../LICENSE', 'utf8', function(err,data){
+	fs.readFile('../css-pcw/LICENSE', 'utf8', function(err,data){
 		if (err) console.log(err);
 		view['license'] = '/*' + data + '*/';
 	});

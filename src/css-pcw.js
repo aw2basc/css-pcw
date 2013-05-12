@@ -4,7 +4,7 @@ var	fs = require('fs'),
 	commander = require('commander'),
 	npmPackage = require('../package.json'),
 	server = require('./css-pcw-server'),
-	jsonPath = '../css-pcw.json';
+	jsonPath = '../css-pcw/css-pcw.json';
 
 var writeConfig = function(def,exit){
 	if(def){
@@ -19,7 +19,7 @@ var writeConfig = function(def,exit){
 };
 
 try {
-	config = require('./css-pcw.json');
+	config = require(jsonPath);
 }catch(err){
 	writeConfig(true,false);
 };
