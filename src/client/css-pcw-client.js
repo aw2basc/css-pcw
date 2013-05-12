@@ -18,7 +18,59 @@ $(function(){
 		this.clientHead.append(this.css);
 		this.clientID = $('#css-pcw');
 		this.clientID.html(this.html);
+		// storage
+		this.curSite = (window.SITE_FOLDER_NAME) ? window.SITE_FOLDER_NAME : (window.location.protocol + "//" + window.location.host + "/" + window.location.pathname);
+		this.storage.par = this;
+		this.storage.get();
+
 		this.setup(this);
+	},
+	storage : {
+		get : function(){
+			if(localStorage){
+				var sRet = localStorage.getItem('css-pcw'),
+					par = this.par;
+				if( sRet != null){
+					par.localSettings = JSON.parse(sRet);
+					var storLen = par.localSettings.site.length,
+						i;
+					for(i=0;i<storLen;i++){
+						if(par.localSettings.site[i] == par.curSite){
+							var rad = $('.css-pcw-radio[value="' + par.localSettings.minify[i] + '"]');
+							rad.prop('checked',true);
+						}
+					}
+				}else{
+					par.localSettings = {site:[par.curSite],minify:["--yui-compress"]};
+					$('.css-pcw-radio[value="--yui-compress"]').prop('checked',true);
+					this.set();
+				}
+				var radB = $('.css-pcw-radio');
+				radB.on('change',function(e){
+					par.storage.set();
+				});
+			}
+		},
+		set : function(){
+			if(localStorage){
+				var par = this.par;
+				var storAdd = function(){
+					var minify = $('.css-pcw-radio:checked').val(),
+						storLen = par.localSettings.site.length,
+						i;
+					for(i=0;i<storLen;i++){
+						if(par.localSettings.site[i] == par.curSite){
+							par.localSettings.minify[i] = minify;
+						}else if(i+1 == storLen){
+							par.localSettings.site.push(par.curSite);
+							storAdd();
+						}
+					}
+				};
+				storAdd();
+				localStorage.setItem('css-pcw', JSON.stringify(this.par.localSettings));
+			}
+		}
 	},
 	setup : function(par){
 		this.compileMessage = $(".css-pcw-message-compile");
@@ -41,6 +93,8 @@ $(function(){
 		this.buttonSubmit = $(".css-pcw-button-submit");
 		this.buttonInput = $(".css-pcw-input");
 		this.optionsContainer = $(".css-pcw-options-container");
+
+		this.minify = "--yui-compress";
 
 		this.load('{{{url}}}/socket.io/socket.io.js',function() {
 			par.socket = io.connect('{{{url}}}');
@@ -67,7 +121,7 @@ $(function(){
 	startWatch : function(){
 		this.buttonRefresh.show();
 		this.buttonPop.show();
-		this.socket.emit("css-pcw-start", this.lessPath);
+		this.socket.emit("css-pcw-start", this.lessPath, this.minify);
 	},
 	buttonEvents : function(par){
 		this.buttonPop.on("click",function(e){
@@ -103,7 +157,7 @@ $(function(){
 		});
 		this.buttonRefresh.on("click",function(e){
 			e.preventDefault();
-			par.socket.emit("css-pcw-compile", par.lessPath);
+			par.socket.emit("css-pcw-compile", par.lessPath, par.minify);
 		});
 		this.buttonOptions.on("click",function(e){
 			e.preventDefault();
@@ -112,6 +166,7 @@ $(function(){
 		this.buttonSubmit.on('click',function(e){
 			e.preventDefault();
 			par.lessPath = par.buttonInput.val();
+			par.minify = $('.css-pcw-radio:checked').val();
 			par.startWatch();
 			par.buttonOptions.trigger('click');
 		});

@@ -24,11 +24,11 @@ client.build(config.url, setupServer);
 
 
 io.sockets.on('connection', function (socket) {
-	socket.on('css-pcw-start', function (path) {
-		compile.setup(socket, path);
+	socket.on('css-pcw-start', function (path, opt) {
+		compile.setup(socket, path, opt);
 	});
-	socket.on('css-pcw-compile', function (path) {
-		compile.file(socket, path);
+	socket.on('css-pcw-compile', function (path, opt) {
+		compile.file(socket, path, opt);
 	});
 });
 

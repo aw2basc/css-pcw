@@ -2,25 +2,24 @@ var fs = require('fs'),
 	less = require('less'),
 	spawn = require('child_process').spawn;
 
-exports.setup = function(socket, path){
-	lessCompiler(socket, path);
+exports.setup = function(socket, path, opt){
+	lessCompiler(socket, path, opt);
 };
-exports.file = function(socket, path){
-	compileFile(socket, path);
+exports.file = function(socket, path, opt){
+	compileFile(socket, path, opt);
 };
 
-var lessCompiler = function(socket, path){
-	console.log('path: ' + path);
+var lessCompiler = function(socket, path, opt){
 	try {
 		fs.exists(path, function(exists){
 			if(exists){
 				if(path.substr(-5) == '.less'){
 					fs.watchFile(path, { persistent:true, interval:500 }, function(c,p){
 						if(p.mtime < c.mtime){
-							compileFile(socket, path);
+							compileFile(socket, path, opt);
 						};
 					});
-					compileFile(socket, path);
+					compileFile(socket, path, opt);
 				}else{
 					compErr(socket, 'file not .less');
 				}
@@ -41,12 +40,12 @@ var compErr = function(socket, err){
 	socket.emit('css-pcw-err', err);
 };
 
-var compileFile = function(socket, path){
+var compileFile = function(socket, path, opt){
 	var cssFile = path.substring(0,path.length - 4) + 'css',
 		logCount = 0,
 		logObj = {},
 		errCount = 0;
-		lessc = spawn('lessc', ['--no-color', '--yui-compress', path, cssFile]);
+		lessc = spawn('lessc', ['--no-color', opt, path, cssFile]);
 	lessc.stderr.setEncoding('utf8');
 	lessc.stderr.on('data', function(data){
 		if(errCount === 0){
