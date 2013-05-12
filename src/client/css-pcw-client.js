@@ -20,16 +20,21 @@ $(function(){
 		this.clientID.html(this.html);
 		// storage
 		this.curSite = (window.SITE_FOLDER_NAME) ? window.SITE_FOLDER_NAME : (window.location.protocol + "//" + window.location.host + "/" + window.location.pathname);
+		this.minify = "--yui-compress";
+		this.disabled = false;
 		this.storage.par = this;
 		this.storage.get();
 
+		// setup
 		this.setup(this);
 	},
 	storage : {
 		get : function(){
 			if(localStorage){
 				var sRet = localStorage.getItem('css-pcw'),
-					par = this.par;
+					par = this.par,
+					radB = $('.css-pcw-radio'),
+					chB = $('.css-pcw-disable');
 				if( sRet != null){
 					par.localSettings = JSON.parse(sRet);
 					var storLen = par.localSettings.site.length,
@@ -38,15 +43,21 @@ $(function(){
 						if(par.localSettings.site[i] == par.curSite){
 							var rad = $('.css-pcw-radio[value="' + par.localSettings.minify[i] + '"]');
 							rad.prop('checked',true);
+							chB.attr('checked',par.localSettings.disable[i]);
+							par.minify = par.localSettings.minify[i];
+							par.disabled = par.localSettings.disable[i];
 						}
 					}
 				}else{
-					par.localSettings = {site:[par.curSite],minify:["--yui-compress"]};
+					par.localSettings = {site:[par.curSite],minify:[par.minify],disable:[par.disabled]};
 					$('.css-pcw-radio[value="--yui-compress"]').prop('checked',true);
+					chB.attr('checked',false);
 					this.set();
 				}
-				var radB = $('.css-pcw-radio');
 				radB.on('change',function(e){
+					par.storage.set();
+				});
+				chB.on('change',function(e){
 					par.storage.set();
 				});
 			}
@@ -56,11 +67,15 @@ $(function(){
 				var par = this.par;
 				var storAdd = function(){
 					var minify = $('.css-pcw-radio:checked').val(),
+						disable = ($('.css-pcw-disable').attr('checked') === undefined) ? false : true,
 						storLen = par.localSettings.site.length,
 						i;
 					for(i=0;i<storLen;i++){
 						if(par.localSettings.site[i] == par.curSite){
 							par.localSettings.minify[i] = minify;
+							par.localSettings.disable[i] = disable;
+							par.minify = minify;
+							par.disabled = disable;
 						}else if(i+1 == storLen){
 							par.localSettings.site.push(par.curSite);
 							storAdd();
@@ -68,7 +83,7 @@ $(function(){
 					}
 				};
 				storAdd();
-				localStorage.setItem('css-pcw', JSON.stringify(this.par.localSettings));
+				localStorage.setItem('css-pcw', JSON.stringify(par.localSettings));
 			}
 		}
 	},
@@ -93,8 +108,6 @@ $(function(){
 		this.buttonSubmit = $(".css-pcw-button-submit");
 		this.buttonInput = $(".css-pcw-input");
 		this.optionsContainer = $(".css-pcw-options-container");
-
-		this.minify = "--yui-compress";
 
 		this.load('{{{url}}}/socket.io/socket.io.js',function() {
 			par.socket = io.connect('{{{url}}}');
@@ -121,7 +134,9 @@ $(function(){
 	startWatch : function(){
 		this.buttonRefresh.show();
 		this.buttonPop.show();
-		this.socket.emit("css-pcw-start", this.lessPath, this.minify);
+		if(!this.disabled){
+			this.socket.emit("css-pcw-start", this.lessPath, this.minify);
+		}
 	},
 	buttonEvents : function(par){
 		this.buttonPop.on("click",function(e){
@@ -157,7 +172,9 @@ $(function(){
 		});
 		this.buttonRefresh.on("click",function(e){
 			e.preventDefault();
-			par.socket.emit("css-pcw-compile", par.lessPath, par.minify);
+			if(!par.disabled){
+				par.socket.emit("css-pcw-compile", par.lessPath, par.minify);
+			}
 		});
 		this.buttonOptions.on("click",function(e){
 			e.preventDefault();
@@ -166,7 +183,6 @@ $(function(){
 		this.buttonSubmit.on('click',function(e){
 			e.preventDefault();
 			par.lessPath = par.buttonInput.val();
-			par.minify = $('.css-pcw-radio:checked').val();
 			par.startWatch();
 			par.buttonOptions.trigger('click');
 		});
@@ -188,12 +204,6 @@ $(function(){
 		this.add2PopUp();
 	},
 	lessError : function(data){
-		/*
-		if(data.lines){
-			var linesData = data.lines.replace("[0m",""),
-				linesArr = linesData.split(/\n/);
-		}
-		*/
 		var	errLineRegex = /on line ([0-9]+) in/gi,
 			errLine = errLineRegex.exec(data.error),
 			errLineNum = (errLine) ? 'error on line ' + errLine[1] : 'parse error';
@@ -207,16 +217,7 @@ $(function(){
 
 		this.errorText.html(errLineNum);
 		this.compileLog.empty();
-		/*
-		if(data.lines){
-			this.compileLog.append('<span class="css-pcw-output-highlight">' + data.error + '</span>' + '<br/>');
-			this.compileLog.append(linesArr[0] + '<br/>');
-			this.compileLog.append('<span class="css-pcw-output-highlight">' + linesArr[1] + '</span>' + '<br/>');
-			this.compileLog.append(linesArr[2]);
-		}else{
-		*/
-			this.compileLog.append(data.error);
-		//}
+		this.compileLog.append(data.error);
 		this.add2PopUp();
 	},
 	genError : function(data){
