@@ -44,8 +44,10 @@ var compileFile = function(socket, path, opt){
 	var cssFile = path.substring(0,path.length - 4) + 'css',
 		logCount = 0,
 		logObj = {},
+		comp = (opt == 'none') ? '' : opt;
 		errCount = 0;
-		lessc = spawn('lessc', ['--no-color', opt, path, cssFile]);
+		lessc = spawn('lessc.cmd', ['--no-color', comp, path, cssFile]);
+		console.log('\n\n cssFile: ' + cssFile + '\n\n lessc: ' + 'lessc.cmd --no-color ' + opt + path + cssFile);
 	lessc.stderr.setEncoding('utf8');
 	lessc.stderr.on('data', function(data){
 		if(errCount === 0){

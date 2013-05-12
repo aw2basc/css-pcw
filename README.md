@@ -2,13 +2,16 @@
 browser based css preprocessor compiler and watcher for less
 
 ## to use  
-**install**  
+**install the package**  
 `npm install css-pcw -g`  
 
-**run**  
+**setup the port and url**  
+`css-pcw --setup`  
+
+**start the server**  
 `css-pcw`  
 
-**add to html**  
+**add below to your html**  
 `<div id="css-pcw"></div>`  
 `<script src="http://localhost:8080/css-pcw/" data-css-pcw="/path/to/less/file.less"></script>`   
 *`data-css-pcw` attr is optional*
