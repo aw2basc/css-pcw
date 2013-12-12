@@ -1,6 +1,6 @@
 {
   "name": "css-pcw",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "browser based css preprocessor compiler and watcher for less",
   "preferGlobal": true,
   "main": "./src/css-pcw-start.js",
@@ -21,7 +21,7 @@
   "author": "justin maxwell",
   "license": "MIT",
   "readmeFilename": "README.md",
-  "gitHead": "818901008f3467d9fe6dd433a7407c03b25a0e93",
+  "gitHead": "16247fbfcde55b9111b48b2c7d819a347fd29b55",
   "dependencies": {
     "express": "~3.1.1",
     "socket.io": "~0.9.8",
