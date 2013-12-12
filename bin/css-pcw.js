@@ -4,18 +4,14 @@ var	fs = require('fs'),
 	commander = require('commander'),
 	npmPackage = require('../package.json'),
 	server = require('../src/css-pcw-server'),
-	jsonReq = '../css-pcw.json';
+	jsonReq = '../css-pcw.json',
 	jsonWri = __dirname + '/../css-pcw.json';
 
 var writeConfig = function(def,exit){
-	if(def){
-		config = {'port':'8080', 'url':'http://localhost:8080'};
-	}
+	if(def) config = {'port':'8080', 'url':'http://localhost:8080'};
 	fs.writeFile(jsonWri, JSON.stringify(config), function(e){
 		if(e) throw err;
-		if(exit){
-			process.exit();
-		}
+		if(exit) process.exit();
 	});
 };
 
@@ -33,18 +29,12 @@ var setupConfig = function(){
 	process.stdout.write('\033[1m\033[33m------- :port -------\033[0m' + '\n');
 	process.stdout.write('current = \033[1;32m' + config.port + '\033[0m\n');
 	commander.prompt('new port -> ', function(port){
-		if(port !== ''){
-			config.port = port;
-		};
-		// url
+		if(port !== '') config.port = port;
 		process.stdout.write('\n\033[1m\033[33m-------- url --------\033[0m' + '\n');
 		process.stdout.write('current = \033[1;32m' + config.url + '\033[0m\n');
 		commander.prompt('new port -> ', function(url){
-			if(url !== ''){
-				config.url = url;
-			}
+			if(url !== '') config.url = url;
 			writeConfig(false,true);
-			// server.start();
 		});
 	});
 };
@@ -59,10 +49,6 @@ commander.on('--help', function(){
 	process.stdout.write('\n\n' + '\033[1;33m------ css-pcw ------' + '\033[0m\n\n');
 });
 
-if(commander.reset){
-	writeConfig(true,true);
-}else if(commander.setup){
-	setupConfig();
-}else{
-	server.start();
-}
+if(commander.reset) writeConfig(true,true);
+else if(commander.setup) setupConfig();
+else server.start();

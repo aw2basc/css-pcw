@@ -5,9 +5,6 @@ var fs = require('fs'),
 	clientJS = '',
 	newJS = '',
 	view = {};
- 
-// console.log(clientPath);
-// console.log(licensePath);
 
 exports.build = function(url, callback){
 	view['url'] = url;
@@ -26,11 +23,11 @@ var setupJS = function(callback){
 
 var getHTML = function(callback){
 	fs.readFile(licensePath, 'utf8', function(err,data){
-		if (err) console.log(err);
+		if(err) console.log(err);
 		view['license'] = '/*' + data + '*/';
 	});
 	fs.readFile(clientPath + 'css-pcw-client.html','utf8',function(err,data) {
-		if (err) console.log(err);
+		if(err) console.log(err);
 		view['html'] = data.replace(/^\s+/, '').replace(/\s+$/, '').replace(/\s+/g, ' ').replace(/<!--[\s\S]*?-->/g,'');
 		callback();
 	});
@@ -38,7 +35,7 @@ var getHTML = function(callback){
 
 var getCSS = function(callback){
 	fs.readFile(clientPath + 'css-pcw-client.css','utf8',function(err,data) {
-		if (err) console.log(err);
+		if(err) console.log(err);
 		view['css'] = data;
 		callback();
 	});
@@ -46,8 +43,7 @@ var getCSS = function(callback){
 
 var getJS = function(callback){
 	fs.readFile(clientPath + 'css-pcw-client.js','utf8',function(err,data) {
-		if (err) console.log(err);
-		// clientJS = data.replace(/^\s+/, '').replace(/\s+$/, '').replace(/\s+/g, ' ');
+		if(err) console.log(err);
 		clientJS = data;
 		callback();
 	});

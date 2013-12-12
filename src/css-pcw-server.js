@@ -20,8 +20,8 @@ exports.start = function(){
 			res.send(newJS);
 		});
 	};
-	client.build(config.url, setupServer);
 
+	client.build(config.url, setupServer);
 
 	io.sockets.on('connection', function (socket) {
 		socket.on('css-pcw-start', function (path, opt) {

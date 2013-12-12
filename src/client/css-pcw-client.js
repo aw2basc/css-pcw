@@ -2,7 +2,6 @@
 {{{license}}}
 
 ;(function(){
-"use strict";
 var client = function($){
 $(function(){
 ({
@@ -24,7 +23,6 @@ $(function(){
 		this.disabled = false;
 		this.storage.par = this;
 		this.storage.get();
-
 		// setup
 		this.setup(this);
 	},
@@ -35,7 +33,7 @@ $(function(){
 					par = this.par,
 					radB = $('.css-pcw-radio'),
 					chB = $('.css-pcw-disable');
-				if( sRet != null){
+				if(sRet != null){
 					par.localSettings = JSON.parse(sRet);
 					var storLen = par.localSettings.site.length,
 						i;
@@ -54,12 +52,8 @@ $(function(){
 					chB.attr('checked',false);
 					this.set();
 				}
-				radB.on('change',function(e){
-					par.storage.set();
-				});
-				chB.on('change',function(e){
-					par.storage.set();
-				});
+				radB.on('change',function(e){par.storage.set();});
+				chB.on('change',function(e){par.storage.set();});
 			}
 		},
 		set : function(){
@@ -93,13 +87,10 @@ $(function(){
 		this.compileMultiplier = $(".css-pcw-message-multiplier");
 		this.compileCount = 0;
 		this.sI=0;
-
 		this.errorMessage = $(".css-pcw-message-error");
 		this.errorText = $(".css-pcw-message-error-text");
-
 		this.compileContainer = $(".css-pcw-output-container");
 		this.compileLog = $(".css-pcw-output-log");
-
 		this.buttonPop = $(".css-pcw-button-pop");
 		this.buttonError = $(".css-pcw-button-error");
 		this.buttonCompile = $(".css-pcw-button-compile");
@@ -108,7 +99,6 @@ $(function(){
 		this.buttonSubmit = $(".css-pcw-button-submit");
 		this.buttonInput = $(".css-pcw-input");
 		this.optionsContainer = $(".css-pcw-options-container");
-
 		this.load('{{{url}}}/socket.io/socket.io.js',function() {
 			par.socket = io.connect('{{{url}}}');
 			par.socketEvents(par);
@@ -124,19 +114,15 @@ $(function(){
 				par.startWatch();
 			}
 		});
-
 		this.socket.on("css-pcw-compile", function(){par.lessCompiled();});
 		this.socket.on("css-pcw-compile-error", function(data){par.lessError(data);});
 		this.socket.on("css-pcw-err", function(data){par.genError(data);});
-
 		this.buttonEvents(this);
 	},
 	startWatch : function(){
 		this.buttonRefresh.show();
 		this.buttonPop.show();
-		if(!this.disabled){
-			this.socket.emit("css-pcw-start", this.lessPath, this.minify);
-		}
+		if(!this.disabled) this.socket.emit("css-pcw-start", this.lessPath, this.minify);
 	},
 	buttonEvents : function(par){
 		this.buttonPop.on("click",function(e){
@@ -172,9 +158,7 @@ $(function(){
 		});
 		this.buttonRefresh.on("click",function(e){
 			e.preventDefault();
-			if(!par.disabled){
-				par.socket.emit("css-pcw-compile", par.lessPath, par.minify);
-			}
+			if(!par.disabled) par.socket.emit("css-pcw-compile", par.lessPath, par.minify);
 		});
 		this.buttonOptions.on("click",function(e){
 			e.preventDefault();
@@ -194,7 +178,6 @@ $(function(){
 		this.errorMessage.hide();
 		this.buttonCompile.show();
 		this.buttonError.hide();
-
 		this.compileLog.empty();
 		this.timer();
 		this.compileCount++;
@@ -207,14 +190,12 @@ $(function(){
 		var	errLineRegex = /on line ([0-9]+) in/gi,
 			errLine = errLineRegex.exec(data.error),
 			errLineNum = (errLine) ? 'error on line ' + errLine[1] : 'parse error';
-
 		this.buttonRefresh.show();
 		this.buttonPop.show();
 		this.compileMessage.hide();
 		this.errorMessage.show();
 		this.buttonCompile.hide();
 		this.buttonError.show();
-
 		this.errorText.html(errLineNum);
 		this.compileLog.empty();
 		this.compileLog.append(data.error);
@@ -225,7 +206,6 @@ $(function(){
 		this.errorMessage.show();
 		this.buttonCompile.hide();
 		this.buttonError.show();
-
 		this.errorText.html(data);
 		this.compileLog.empty();
 		this.compileLog.html(data);
@@ -245,16 +225,11 @@ $(function(){
 		},1000);
 	},
 	add2PopUp : function(){
-		if(this.hasOwnProperty('popUp')){
-			this.popUp.html(this.compileLog.html());
-		}
+		if(this.hasOwnProperty('popUp')) this.popUp.html(this.compileLog.html());
 	},
 	htmlEncode : function(value){
-		if (value) {
-			return $("<div />").text(value).html();
-		} else {
-			return "";
-		}
+		if(value) return $("<div />").text(value).html();
+		else return "";
 	}
 }).init();
 });
@@ -282,6 +257,5 @@ $(function(){
 })(window, document, "1.8.3", function($) {
 	client($);
 });
-
 
 }());
